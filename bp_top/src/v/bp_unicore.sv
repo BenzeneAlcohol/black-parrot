@@ -110,7 +110,7 @@ module bp_unicore
   logic [4:0][uce_fill_width_p-1:0] dev_resp_data_lo;
   logic [4:0] dev_resp_v_lo, dev_resp_ready_and_li, dev_resp_last_lo;
 
-  logic timer_irq_li, software_irq_li, m_external_irq_li, s_external_irq_li;
+  logic timer_irq_li, software_irq_li, m_external_irq_li, s_external_irq_li, debug_irq_li;
   bp_unicore_lite
    #(.bp_params_p(bp_params_p))
    unicore_lite
@@ -134,6 +134,7 @@ module bp_unicore
      ,.software_irq_i(software_irq_li)
      ,.m_external_irq_i(m_external_irq_li)
      ,.s_external_irq_i(s_external_irq_li)
+     ,.debug_irq_i(debug_irq_li)
      );
 
   // Assign incoming I/O as basically another UCE interface
@@ -162,7 +163,7 @@ module bp_unicore
       wire is_other_hio    = (proc_cmd_header_lo[i].addr[paddr_width_p-1-:hio_width_p] != 0);
       wire is_cfg_cmd      = local_cmd_li & (device_cmd_li == cfg_dev_gp);
       wire is_clint_cmd    = local_cmd_li & (device_cmd_li == clint_dev_gp);
-      wire is_io_cmd       = (local_cmd_li & (device_cmd_li inside {boot_dev_gp, host_dev_gp}))
+      wire is_io_cmd       = (local_cmd_li & (device_cmd_li == host_dev_gp))
                              | is_other_hio | is_other_core;
       wire is_mem_cmd      = (~local_cmd_li & ~is_other_hio) || (local_cmd_li & (device_cmd_li == cache_dev_gp));
       wire is_loopback_cmd = local_cmd_li & ~is_cfg_cmd & ~is_clint_cmd & ~is_io_cmd & ~is_mem_cmd;
@@ -293,6 +294,7 @@ module bp_unicore
      ,.software_irq_o(software_irq_li)
      ,.m_external_irq_o(m_external_irq_li)
      ,.s_external_irq_o(s_external_irq_li)
+     ,.debug_irq_o(debug_irq_li)
      );
   assign clint_data_li = dev_cmd_data_li[1];
   assign dev_resp_data_lo[1] = clint_data_lo;

@@ -93,6 +93,7 @@
     //   Currently unused, so set to 1 bit
     integer unsigned asid_width;
 
+    // Soon to be deprecated
     // The virtual address of the PC coming out of reset
     integer unsigned boot_pc;
     // 0: boots in M-mode, not debug-mode
@@ -257,8 +258,8 @@
       ,caddr_width: 32
       ,asid_width : 1
 
-      ,boot_pc       : dram_base_addr_gp
-      ,boot_in_debug : 0
+      ,boot_pc       : boot_base_addr_gp
+      ,boot_in_debug : 1
 
       ,branch_metadata_fwd_width: 39
       ,btb_tag_width            : 9
